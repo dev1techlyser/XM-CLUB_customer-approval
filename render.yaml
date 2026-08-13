@@ -1,0 +1,21 @@
+# Render Blueprint — free web service for Customer Approval
+# Pair with Neon free Postgres (DATABASE_URL). SQLite will not survive Render free sleep.
+services:
+  - type: web
+    name: customer-approval
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SHOPIFY_API_KEY
+        sync: false
+      - key: SHOPIFY_API_SECRET
+        sync: false
+      - key: SCOPES
+        value: read_customers,read_metaobject_definitions,read_metaobjects,read_products,write_customers,write_metaobject_definitions,write_metaobjects,write_products
+      - key: SHOPIFY_APP_URL
+        sync: false
+      - key: DATABASE_URL
+        sync: false

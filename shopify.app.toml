@@ -1,0 +1,35 @@
+# Default local fallback — use named configs for real apps:
+#   shopify.app.xm-private-reserve.toml  (dev)
+#   shopify.app.customer-approval.toml   (client)
+
+client_id = "9e17b3c17d78242541a929c9b3d3bc6b"
+name = "Customer Approval"
+application_url = "https://shopify.dev/apps/default-app-home"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+include_config_on_deploy = true
+dev_store_url = "xmclub-psw9jzce.myshopify.com"
+
+[webhooks]
+api_version = "2026-01"
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/uninstalled"
+  topics = ["app/uninstalled"]
+
+  [[webhooks.subscriptions]]
+  topics = ["app/scopes_update"]
+  uri = "/webhooks/app/scopes_update"
+
+[access_scopes]
+scopes = "read_customers,read_metaobject_definitions,read_metaobjects,read_products,write_customers,write_metaobject_definitions,write_metaobjects,write_products"
+
+[auth]
+redirect_urls = [ "https://shopify.dev/apps/default-app-home/api/auth" ]
+
+[app_proxy]
+url = "/api/proxy"
+subpath = "customer-approval"
+prefix = "apps"

@@ -1,0 +1,8 @@
+name = "remix"
+roles = ["frontend", "backend"]
+webhooks_path = "/webhooks/app/uninstalled"
+
+[commands]
+# Finish DB work before Vite listens — avoids App Proxy ECONNREFUSED race
+predev = "npx prisma generate && npx prisma migrate deploy"
+dev = "npx remix vite:dev"
