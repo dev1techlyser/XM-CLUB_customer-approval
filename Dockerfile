@@ -5,17 +5,24 @@ EXPOSE 3000
 
 WORKDIR /app
 
-ENV NODE_ENV=production
-
 COPY package.json package-lock.json* ./
 
-RUN npm ci --omit=dev && npm cache clean --force
-# Remove CLI packages since we don't need them in production by default.
-# Remove this line if you want to run CLI commands in your container.
-RUN npm remove @shopify/cli || true
+# Need vite/typescript (devDependencies) for `remix vite:build`
+RUN npm ci && npm cache clean --force
 
 COPY . .
 
+# Generate Prisma client before Remix build (does not need a live DB)
+RUN npx prisma generate
+
+# Shopify Remix embeds the API key at build time
+ARG SHOPIFY_API_KEY
+ENV SHOPIFY_API_KEY=$SHOPIFY_API_KEY
+ENV NODE_ENV=production
+
 RUN npm run build
+
+# Shrink runtime image
+RUN npm prune --omit=dev && (npm remove @shopify/cli || true)
 
 CMD ["npm", "run", "docker-start"]
