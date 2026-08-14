@@ -72,6 +72,11 @@ export default defineConfig({
   build: {
     assetsInlineLimit: 0,
   },
+  // Keep Prisma + query engines out of the SSR bundle so Vercel can resolve
+  // libquery_engine-rhel-openssl-3.0.x.so.node from node_modules at runtime.
+  ssr: {
+    external: ["@prisma/client", ".prisma/client"],
+  },
   optimizeDeps: {
     include: ["@shopify/app-bridge-react", "@shopify/polaris"],
   },
