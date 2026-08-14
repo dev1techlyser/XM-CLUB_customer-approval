@@ -9,25 +9,17 @@ import { isbot } from "isbot";
 
 export const streamTimeout = 5000;
 
+/**
+ * Intentionally has ZERO Shopify/Prisma imports so isolated probe server
+ * bundles (/health, /ping) cannot crash on cold start.
+ * Embedded CSP headers come from app/routes/app.tsx `boundary.headers`.
+ */
 export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
 ) {
-  const url = new URL(request.url);
-  const isHealth = url.pathname === "/health" || url.pathname.startsWith("/health/");
-
-  // Never boot Shopify/Prisma session storage for health checks.
-  if (!isHealth) {
-    try {
-      const { addDocumentResponseHeaders } = await import("./shopify.server");
-      addDocumentResponseHeaders(request, responseHeaders);
-    } catch (error) {
-      console.error("[entry.server] addDocumentResponseHeaders failed:", error);
-    }
-  }
-
   const userAgent = request.headers.get("user-agent");
   const callbackName = isbot(userAgent ?? "") ? "onAllReady" : "onShellReady";
 
