@@ -2,7 +2,7 @@
 
 client_id = "9e17b3c17d78242541a929c9b3d3bc6b"
 name = "Customer Approval"
-application_url = "https://independently-boom-multiple-quit.trycloudflare.com"
+application_url = "https://xm-club-customer-approval.vercel.app"
 embedded = true
 
 [build]
@@ -25,9 +25,9 @@ scopes = "read_customers,read_metaobject_definitions,read_metaobjects,read_produ
 
 [auth]
 redirect_urls = [
-  "https://independently-boom-multiple-quit.trycloudflare.com/auth/callback",
-  "https://independently-boom-multiple-quit.trycloudflare.com/auth/shopify/callback",
-  "https://independently-boom-multiple-quit.trycloudflare.com/api/auth/callback"
+  "https://xm-club-customer-approval.vercel.app/auth/callback",
+  "https://xm-club-customer-approval.vercel.app/auth/shopify/callback",
+  "https://xm-club-customer-approval.vercel.app/api/auth/callback"
 ]
 
 [app_proxy]
