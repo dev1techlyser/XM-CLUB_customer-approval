@@ -3,33 +3,30 @@ import {
   ApiVersion,
   AppDistribution,
   shopifyApp,
+  type LoginError,
 } from "@shopify/shopify-app-remix/server";
 import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prisma";
 import prisma from "./db.server";
 
-/**
- * Lazy init avoids unhandled rejections from PrismaSessionStorage.pollForTable()
- * crashing the whole Vercel isolate on cold start when DB is briefly unreachable.
- */
-function createShopifyApp() {
+type ShopifyAppInstance = ReturnType<typeof shopifyApp>;
+
+let _shopify: ShopifyAppInstance | null = null;
+
+function createShopifyApp(): ShopifyAppInstance {
   const sessionStorage = new PrismaSessionStorage(prisma, {
     connectionRetries: 5,
     connectionRetryIntervalMs: 1000,
   });
 
-  // Constructor starts an internal readiness poll that rejects as unhandled
-  // if the Session table/DB is unreachable — absorb it, then use isReady().
-  const internalReady = (sessionStorage as unknown as { ready?: Promise<boolean> })
-    .ready;
+  // Constructor kicks off an internal poll that can reject as unhandled.
+  const internalReady = (
+    sessionStorage as unknown as { ready?: Promise<boolean> }
+  ).ready;
   if (internalReady?.catch) {
     void internalReady.catch((error: unknown) => {
       console.error("[shopify.server] session storage poll failed:", error);
     });
   }
-
-  void sessionStorage.isReady().then((ok) => {
-    if (!ok) console.error("[shopify.server] session storage isReady=false");
-  });
 
   return shopifyApp({
     apiKey: process.env.SHOPIFY_API_KEY,
@@ -50,13 +47,58 @@ function createShopifyApp() {
   });
 }
 
-const shopify = createShopifyApp();
+/** Lazily create the Shopify app so /health does not boot session storage. */
+export function getShopifyApp(): ShopifyAppInstance {
+  if (!_shopify) {
+    _shopify = createShopifyApp();
+  }
+  return _shopify;
+}
 
-export default shopify;
+const shopifyProxy = new Proxy({} as ShopifyAppInstance, {
+  get(_target, prop, receiver) {
+    return Reflect.get(getShopifyApp(), prop, receiver);
+  },
+});
+
+export default shopifyProxy;
 export const apiVersion = ApiVersion.January26;
-export const addDocumentResponseHeaders = shopify.addDocumentResponseHeaders;
-export const authenticate = shopify.authenticate;
-export const unauthenticated = shopify.unauthenticated;
-export const login = shopify.login;
-export const registerWebhooks = shopify.registerWebhooks;
-export const sessionStorage = shopify.sessionStorage;
+
+export const addDocumentResponseHeaders: ShopifyAppInstance["addDocumentResponseHeaders"] =
+  (...args) => getShopifyApp().addDocumentResponseHeaders(...args);
+
+export const authenticate = new Proxy(
+  {} as ShopifyAppInstance["authenticate"],
+  {
+    get(_target, prop, receiver) {
+      return Reflect.get(getShopifyApp().authenticate, prop, receiver);
+    },
+  },
+);
+
+export const unauthenticated = new Proxy(
+  {} as ShopifyAppInstance["unauthenticated"],
+  {
+    get(_target, prop, receiver) {
+      return Reflect.get(getShopifyApp().unauthenticated, prop, receiver);
+    },
+  },
+);
+
+export const login = ((...args: Parameters<ShopifyAppInstance["login"]>) =>
+  getShopifyApp().login(...args)) as ShopifyAppInstance["login"];
+
+export const registerWebhooks: ShopifyAppInstance["registerWebhooks"] = (
+  ...args
+) => getShopifyApp().registerWebhooks(...args);
+
+export const sessionStorage = new Proxy(
+  {} as ShopifyAppInstance["sessionStorage"],
+  {
+    get(_target, prop, receiver) {
+      return Reflect.get(getShopifyApp().sessionStorage, prop, receiver);
+    },
+  },
+);
+
+export type { LoginError };

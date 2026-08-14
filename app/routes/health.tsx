@@ -1,6 +1,9 @@
 import type { LoaderFunctionArgs } from "@vercel/remix";
 
-/** Uptime + env/db diagnostics (no secrets). */
+/**
+ * Minimal health check — no Shopify imports.
+ * Prisma is loaded only inside try/catch so connection errors return JSON 503.
+ */
 export const loader = async (_args: LoaderFunctionArgs) => {
   const env = {
     hasApiKey: Boolean(process.env.SHOPIFY_API_KEY),
@@ -19,11 +22,19 @@ export const loader = async (_args: LoaderFunctionArgs) => {
     })(),
   };
 
-  let db: { ok: boolean; sessionCount?: number; error?: string } = { ok: false };
+  let db: { ok: boolean; sessionCount?: number; error?: string } = {
+    ok: false,
+  };
+
   try {
-    const prisma = (await import("../db.server")).default;
-    const sessionCount = await prisma.session.count();
-    db = { ok: true, sessionCount };
+    const { PrismaClient } = await import("@prisma/client");
+    const prisma = new PrismaClient();
+    try {
+      const sessionCount = await prisma.session.count();
+      db = { ok: true, sessionCount };
+    } finally {
+      await prisma.$disconnect().catch(() => undefined);
+    }
   } catch (error) {
     db = {
       ok: false,
@@ -31,8 +42,7 @@ export const loader = async (_args: LoaderFunctionArgs) => {
     };
   }
 
-  const body = JSON.stringify({ ok: db.ok, env, db }, null, 2);
-  return new Response(body, {
+  return new Response(JSON.stringify({ ok: db.ok, env, db }, null, 2), {
     status: db.ok ? 200 : 503,
     headers: { "Content-Type": "application/json; charset=utf-8" },
   });
