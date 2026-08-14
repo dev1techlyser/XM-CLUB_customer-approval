@@ -2,8 +2,6 @@ import type { LoaderFunctionArgs } from "@vercel/remix";
 import { redirect } from "@vercel/remix";
 import { Form, useLoaderData } from "@remix-run/react";
 
-import { login } from "../../shopify.server";
-
 import styles from "./styles.module.css";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -13,7 +11,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     throw redirect(`/app?${url.searchParams.toString()}`);
   }
 
-  return { showForm: Boolean(login) };
+  // Do not import shopify.server here — keeps `/` from booting session storage.
+  return { showForm: true };
 };
 
 export default function App() {
