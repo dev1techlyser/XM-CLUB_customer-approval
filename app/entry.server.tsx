@@ -4,15 +4,18 @@ import { RemixServer } from "@remix-run/react";
 import {
   createReadableStreamFromReadable,
   type EntryContext,
-} from "@vercel/remix";
+} from "@remix-run/node";
 import { isbot } from "isbot";
 
 export const streamTimeout = 5000;
 
 /**
- * Intentionally has ZERO Shopify/Prisma imports so isolated probe server
- * bundles (/health, /ping) cannot crash on cold start.
- * Embedded CSP headers come from app/routes/app.tsx `boundary.headers`.
+ * No Shopify/Prisma imports — keeps /health + /ping server bundles clean.
+ * Embedded CSP comes from app/routes/app.tsx `boundary.headers`.
+ *
+ * IMPORTANT: do NOT import createReadableStreamFromReadable from @vercel/remix —
+ * that package does not export it at runtime and crashes the serverless function
+ * with FUNCTION_INVOCATION_FAILED on every request.
  */
 export default async function handleRequest(
   request: Request,
