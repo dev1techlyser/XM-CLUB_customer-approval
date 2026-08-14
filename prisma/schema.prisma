@@ -6,9 +6,10 @@ generator client {
 }
 
 datasource db {
-  // Local + Render: use Postgres (Neon free). SQLite cannot survive Render free sleep/redeploy.
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // Supabase / Neon Postgres. Use pooled URL for DATABASE_URL; direct for migrations.
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Session {

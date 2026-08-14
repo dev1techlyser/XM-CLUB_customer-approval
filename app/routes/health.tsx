@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@vercel/remix";
 
 /** Lightweight uptime probe for Render / load balancers (no auth). */
 export const loader = async (_args: LoaderFunctionArgs) => {

@@ -1,4 +1,4 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@vercel/remix";
 import { Form, useActionData, useLoaderData, useNavigation } from "@remix-run/react";
 import {
   Banner,

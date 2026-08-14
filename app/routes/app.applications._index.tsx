@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@vercel/remix";
 import { useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import {
   Badge,
