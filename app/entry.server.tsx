@@ -15,12 +15,17 @@ export default async function handleRequest(
   responseHeaders: Headers,
   remixContext: EntryContext,
 ) {
-  // Lazy-load Shopify headers so /health can boot even if session DB is down.
-  try {
-    const { addDocumentResponseHeaders } = await import("./shopify.server");
-    addDocumentResponseHeaders(request, responseHeaders);
-  } catch (error) {
-    console.error("[entry.server] addDocumentResponseHeaders failed:", error);
+  const url = new URL(request.url);
+  const isHealth = url.pathname === "/health" || url.pathname.startsWith("/health/");
+
+  // Never boot Shopify/Prisma session storage for health checks.
+  if (!isHealth) {
+    try {
+      const { addDocumentResponseHeaders } = await import("./shopify.server");
+      addDocumentResponseHeaders(request, responseHeaders);
+    } catch (error) {
+      console.error("[entry.server] addDocumentResponseHeaders failed:", error);
+    }
   }
 
   const userAgent = request.headers.get("user-agent");

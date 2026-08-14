@@ -17,9 +17,18 @@ function createShopifyApp() {
     connectionRetryIntervalMs: 1000,
   });
 
-  // Prevent unhandled rejection from storage readiness poll during boot.
-  void sessionStorage.isReady().catch((error) => {
-    console.error("[shopify.server] session storage not ready:", error);
+  // Constructor starts an internal readiness poll that rejects as unhandled
+  // if the Session table/DB is unreachable — absorb it, then use isReady().
+  const internalReady = (sessionStorage as unknown as { ready?: Promise<boolean> })
+    .ready;
+  if (internalReady?.catch) {
+    void internalReady.catch((error: unknown) => {
+      console.error("[shopify.server] session storage poll failed:", error);
+    });
+  }
+
+  void sessionStorage.isReady().then((ok) => {
+    if (!ok) console.error("[shopify.server] session storage isReady=false");
   });
 
   return shopifyApp({
