@@ -9,6 +9,18 @@ import {
   LEGACY_MEMBER_TAG,
   type MembershipType,
 } from "../constants/private-reserve";
+import {
+  isProtectedCustomerDataError,
+  protectedCustomerDataMessage,
+  type MemberListSort,
+} from "./customers.shared";
+
+export {
+  customerAdminUrl,
+  isProtectedCustomerDataError,
+  protectedCustomerDataMessage,
+  type MemberListSort,
+} from "./customers.shared";
 
 type AdminClient = AdminApiContext;
 
@@ -20,38 +32,6 @@ export type ShopifyCustomerSummary = {
   tags: string[];
   memberNumber: string | null;
 };
-
-const PCD_HELP =
-  "This app is not approved for Protected Customer Data yet. In Partner Dashboard → your app → API access → Protected customer data access, request Protected customer data and the Name + Email fields, then Save. For development stores you do not need Shopify review after saving. Then retry Approve.";
-
-export function isProtectedCustomerDataError(error: unknown): boolean {
-  const message =
-    error instanceof Error
-      ? error.message
-      : typeof error === "string"
-        ? error
-        : "";
-  const nested =
-    error &&
-    typeof error === "object" &&
-    "response" in error &&
-    error.response &&
-    typeof error.response === "object" &&
-    "errors" in (error.response as object)
-      ? JSON.stringify((error.response as { errors?: unknown }).errors)
-      : "";
-  const blob = `${message} ${nested}`;
-  return /protected customer data|not approved to access the Customer object/i.test(
-    blob,
-  );
-}
-
-export function protectedCustomerDataMessage(error?: unknown): string {
-  if (error && !isProtectedCustomerDataError(error) && error instanceof Error) {
-    return error.message;
-  }
-  return PCD_HELP;
-}
 
 /**
  * Safest split for a single "full name" field.
@@ -116,7 +96,7 @@ export async function findCustomerByEmail(
     } = await response.json();
 
     if (json.errors?.some((e) => isProtectedCustomerDataError(e.message))) {
-      throw new Error(PCD_HELP);
+      throw new Error(protectedCustomerDataMessage());
     }
 
     const nodes = json.data?.customers?.nodes ?? [];
@@ -134,7 +114,7 @@ export async function findCustomerByEmail(
     };
   } catch (error) {
     if (isProtectedCustomerDataError(error)) {
-      throw new Error(PCD_HELP);
+      throw new Error(protectedCustomerDataMessage());
     }
     throw error;
   }
@@ -201,7 +181,7 @@ export async function createCustomer(params: {
       const apiMessage =
         json.errors?.[0]?.message || userErrors[0]?.message || "";
       if (isProtectedCustomerDataError(apiMessage)) {
-        return { ok: false, message: PCD_HELP };
+        return { ok: false, message: protectedCustomerDataMessage() };
       }
       // Race: customer created between find and create — re-find
       try {
@@ -211,7 +191,7 @@ export async function createCustomer(params: {
         }
       } catch (findError) {
         if (isProtectedCustomerDataError(findError)) {
-          return { ok: false, message: PCD_HELP };
+          return { ok: false, message: protectedCustomerDataMessage() };
         }
       }
       return {
@@ -243,7 +223,7 @@ export async function createCustomer(params: {
     };
   } catch (error) {
     if (isProtectedCustomerDataError(error)) {
-      return { ok: false, message: PCD_HELP };
+      return { ok: false, message: protectedCustomerDataMessage() };
     }
     return {
       ok: false,
@@ -785,14 +765,6 @@ export type MemberListItem = {
   hasApprovedTag: boolean;
 };
 
-export type MemberListSort =
-  | "joined_desc"
-  | "joined_asc"
-  | "name_asc"
-  | "name_desc"
-  | "member_number_asc"
-  | "member_number_desc";
-
 export type ListMembersParams = {
   search?: string | null;
   membershipType?: string | null;
@@ -1048,8 +1020,3 @@ export function assertMembershipType(
   return isMembershipType(value) ? value : null;
 }
 
-export function customerAdminUrl(shop: string, customerGid: string): string {
-  const numeric = customerGid.split("/").pop() || "";
-  const storeHandle = shop.replace(/\.myshopify\.com$/i, "");
-  return `https://admin.shopify.com/store/${storeHandle}/customers/${numeric}`;
-}

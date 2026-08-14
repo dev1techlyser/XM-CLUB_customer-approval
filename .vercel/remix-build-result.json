@@ -1,0 +1,279 @@
+{
+  "buildManifest": {
+    "serverBundles": {
+      "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0": {
+        "id": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+        "file": "build/server/nodejs-eyJydW50aW1lIjoibm9kZWpzIn0/index.js",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    },
+    "routeIdToServerBundleId": {
+      "routes/webhooks.app.scopes_update": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/webhooks.app.uninstalled": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/api.proxy.applications": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/auth.login": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/auth.$": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/health": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_index": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/app.applications._index": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/app.applications.$id": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/app.members._index": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/app.members.$id": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/app.settings": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/app._index": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0"
+    },
+    "routes": {
+      "root": {
+        "path": "",
+        "id": "root",
+        "file": "app/root.tsx",
+        "config": {}
+      },
+      "routes/webhooks.app.scopes_update": {
+        "id": "routes/webhooks.app.scopes_update",
+        "parentId": "root",
+        "file": "app/routes/webhooks.app.scopes_update.tsx",
+        "path": "webhooks/app/scopes_update",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/webhooks.app.uninstalled": {
+        "id": "routes/webhooks.app.uninstalled",
+        "parentId": "root",
+        "file": "app/routes/webhooks.app.uninstalled.tsx",
+        "path": "webhooks/app/uninstalled",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/api.proxy.applications": {
+        "id": "routes/api.proxy.applications",
+        "parentId": "root",
+        "file": "app/routes/api.proxy.applications.tsx",
+        "path": "api/proxy/applications",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/auth.login": {
+        "id": "routes/auth.login",
+        "parentId": "root",
+        "file": "app/routes/auth.login/route.tsx",
+        "path": "auth/login",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/auth.$": {
+        "id": "routes/auth.$",
+        "parentId": "root",
+        "file": "app/routes/auth.$.tsx",
+        "path": "auth/*",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/health": {
+        "id": "routes/health",
+        "parentId": "root",
+        "file": "app/routes/health.tsx",
+        "path": "health",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/_index": {
+        "id": "routes/_index",
+        "parentId": "root",
+        "file": "app/routes/_index/route.tsx",
+        "index": true,
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/app": {
+        "id": "routes/app",
+        "parentId": "root",
+        "file": "app/routes/app.tsx",
+        "path": "app",
+        "config": {}
+      },
+      "routes/app.applications._index": {
+        "id": "routes/app.applications._index",
+        "parentId": "routes/app",
+        "file": "app/routes/app.applications._index.tsx",
+        "path": "applications",
+        "index": true,
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/app.applications.$id": {
+        "id": "routes/app.applications.$id",
+        "parentId": "routes/app",
+        "file": "app/routes/app.applications.$id.tsx",
+        "path": "applications/:id",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/app.members._index": {
+        "id": "routes/app.members._index",
+        "parentId": "routes/app",
+        "file": "app/routes/app.members._index.tsx",
+        "path": "members",
+        "index": true,
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/app.members.$id": {
+        "id": "routes/app.members.$id",
+        "parentId": "routes/app",
+        "file": "app/routes/app.members.$id.tsx",
+        "path": "members/:id",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/app.settings": {
+        "id": "routes/app.settings",
+        "parentId": "routes/app",
+        "file": "app/routes/app.settings.tsx",
+        "path": "settings",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/app._index": {
+        "id": "routes/app._index",
+        "parentId": "routes/app",
+        "file": "app/routes/app._index.tsx",
+        "index": true,
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    }
+  },
+  "remixConfig": {
+    "appDirectory": "E:\\CURSOR-SHOPIFY\\xm-private-reserve\\app",
+    "basename": "/",
+    "buildDirectory": "E:\\CURSOR-SHOPIFY\\xm-private-reserve\\build",
+    "future": {
+      "v3_fetcherPersist": true,
+      "v3_relativeSplatPath": true,
+      "v3_throwAbortReason": true,
+      "v3_routeConfig": true,
+      "v3_singleFetch": false,
+      "v3_lazyRouteDiscovery": true,
+      "unstable_optimizeDeps": false
+    },
+    "manifest": false,
+    "publicPath": "/",
+    "routes": {
+      "root": {
+        "path": "",
+        "id": "root",
+        "file": "root.tsx"
+      },
+      "routes/webhooks.app.scopes_update": {
+        "id": "routes/webhooks.app.scopes_update",
+        "parentId": "root",
+        "file": "routes/webhooks.app.scopes_update.tsx",
+        "path": "webhooks/app/scopes_update"
+      },
+      "routes/webhooks.app.uninstalled": {
+        "id": "routes/webhooks.app.uninstalled",
+        "parentId": "root",
+        "file": "routes/webhooks.app.uninstalled.tsx",
+        "path": "webhooks/app/uninstalled"
+      },
+      "routes/api.proxy.applications": {
+        "id": "routes/api.proxy.applications",
+        "parentId": "root",
+        "file": "routes/api.proxy.applications.tsx",
+        "path": "api/proxy/applications"
+      },
+      "routes/auth.login": {
+        "id": "routes/auth.login",
+        "parentId": "root",
+        "file": "routes/auth.login/route.tsx",
+        "path": "auth/login"
+      },
+      "routes/auth.$": {
+        "id": "routes/auth.$",
+        "parentId": "root",
+        "file": "routes/auth.$.tsx",
+        "path": "auth/*"
+      },
+      "routes/health": {
+        "id": "routes/health",
+        "parentId": "root",
+        "file": "routes/health.tsx",
+        "path": "health"
+      },
+      "routes/_index": {
+        "id": "routes/_index",
+        "parentId": "root",
+        "file": "routes/_index/route.tsx",
+        "index": true
+      },
+      "routes/app": {
+        "id": "routes/app",
+        "parentId": "root",
+        "file": "routes/app.tsx",
+        "path": "app"
+      },
+      "routes/app.applications._index": {
+        "id": "routes/app.applications._index",
+        "parentId": "routes/app",
+        "file": "routes/app.applications._index.tsx",
+        "path": "applications",
+        "index": true
+      },
+      "routes/app.applications.$id": {
+        "id": "routes/app.applications.$id",
+        "parentId": "routes/app",
+        "file": "routes/app.applications.$id.tsx",
+        "path": "applications/:id"
+      },
+      "routes/app.members._index": {
+        "id": "routes/app.members._index",
+        "parentId": "routes/app",
+        "file": "routes/app.members._index.tsx",
+        "path": "members",
+        "index": true
+      },
+      "routes/app.members.$id": {
+        "id": "routes/app.members.$id",
+        "parentId": "routes/app",
+        "file": "routes/app.members.$id.tsx",
+        "path": "members/:id"
+      },
+      "routes/app.settings": {
+        "id": "routes/app.settings",
+        "parentId": "routes/app",
+        "file": "routes/app.settings.tsx",
+        "path": "settings"
+      },
+      "routes/app._index": {
+        "id": "routes/app._index",
+        "parentId": "routes/app",
+        "file": "routes/app._index.tsx",
+        "index": true
+      }
+    },
+    "serverBuildFile": "index.js",
+    "serverModuleFormat": "esm",
+    "ssr": true
+  },
+  "viteConfig": {
+    "build": {
+      "assetsDir": "assets"
+    }
+  }
+}

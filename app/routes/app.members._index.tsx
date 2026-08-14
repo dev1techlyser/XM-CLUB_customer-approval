@@ -26,10 +26,10 @@ import {
   MEMBERSHIP_TYPES,
 } from "../constants/private-reserve";
 import {
-  listApprovedMembers,
-  type MemberListSort,
   customerAdminUrl,
-} from "../models/customers.server";
+  type MemberListSort,
+} from "../models/customers.shared";
+import { listApprovedMembers } from "../models/customers.server";
 import { authenticate } from "../shopify.server";
 
 const SORT_OPTIONS: Array<{ label: string; value: MemberListSort }> = [

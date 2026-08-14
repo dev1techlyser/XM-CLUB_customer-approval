@@ -35,7 +35,7 @@ import {
   resendApprovalEmail,
   waitlistApplication,
 } from "../models/applications.server";
-import { customerAdminUrl, protectedCustomerDataMessage } from "../models/customers.server";
+import { customerAdminUrl, protectedCustomerDataMessage } from "../models/customers.shared";
 import { authenticate } from "../shopify.server";
 
 function statusTone(status: string | null) {

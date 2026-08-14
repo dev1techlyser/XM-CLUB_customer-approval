@@ -14,10 +14,8 @@ import {
 import type { ReactNode } from "react";
 
 import { getApplicationById } from "../models/applications.server";
-import {
-  customerAdminUrl,
-  getApprovedMemberById,
-} from "../models/customers.server";
+import { customerAdminUrl } from "../models/customers.shared";
+import { getApprovedMemberById } from "../models/customers.server";
 import { authenticate } from "../shopify.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
