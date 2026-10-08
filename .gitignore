@@ -31,3 +31,4 @@ pnpm-lock.yaml
 .tools/
 _theme-check/
 .vercel/
+.vercel/remix-build-result.json
