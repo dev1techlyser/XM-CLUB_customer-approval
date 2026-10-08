@@ -4,11 +4,19 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
+import type { LoaderFunctionArgs } from "@vercel/remix";
+
+export const loader = async (_args: LoaderFunctionArgs) => {
+  return { apiKey: process.env.SHOPIFY_API_KEY || "" };
+};
 
 export default function App() {
+  const { apiKey } = useLoaderData<typeof loader>();
+
   return (
-    <html>
+    <html lang="en" data-shopify-api-key={apiKey}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />

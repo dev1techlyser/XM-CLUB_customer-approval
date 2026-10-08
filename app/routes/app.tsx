@@ -1,5 +1,13 @@
 import type { HeadersFunction, LoaderFunctionArgs } from "@vercel/remix";
-import { Link, Outlet, useLoaderData, useRouteError } from "@remix-run/react";
+import {
+  Link,
+  Outlet,
+  useLoaderData,
+  useMatches,
+  useRouteError,
+  isRouteErrorResponse,
+} from "@remix-run/react";
+import { Banner, Page, Text } from "@shopify/polaris";
 import { NavMenu } from "@shopify/app-bridge-react";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { boundary } from "@shopify/shopify-app-remix/server";
@@ -41,8 +49,45 @@ export default function App() {
   );
 }
 
+function useRootApiKey(): string {
+  const matches = useMatches();
+  const root = matches.find((m) => m.id === "root");
+  const data = root?.data as { apiKey?: string } | undefined;
+  return data?.apiKey || "";
+}
+
+function errorMessage(error: unknown): string {
+  if (isRouteErrorResponse(error)) {
+    return error.data?.message || error.statusText || `HTTP ${error.status}`;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return "Something went wrong loading the app.";
+}
+
 export function ErrorBoundary() {
-  return boundary.error(useRouteError());
+  const error = useRouteError();
+  const apiKey = useRootApiKey();
+
+  if (!apiKey) {
+    return boundary.error(error);
+  }
+
+  return (
+    <AppProvider isEmbeddedApp apiKey={apiKey}>
+      <Page title="Application error">
+        <Banner tone="critical">
+          <Text as="p">{errorMessage(error)}</Text>
+          <Text as="p" tone="subdued">
+            If this mentions the database or session, confirm Vercel env
+            DATABASE_URL / DIRECT_URL and redeploy. Then open this app again to
+            re-authenticate.
+          </Text>
+        </Banner>
+      </Page>
+    </AppProvider>
+  );
 }
 
 export const headers: HeadersFunction = (headersArgs) => {
