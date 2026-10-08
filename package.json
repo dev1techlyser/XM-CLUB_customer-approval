@@ -13,6 +13,7 @@
     "docker-start": "npm run setup && npm run start",
     "setup": "npx prisma generate && npx prisma migrate deploy",
     "postinstall": "npx prisma generate && node scripts/ensure-build-dir.mjs",
+    "prebuild": "node scripts/ensure-build-dir.mjs",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "shopify": "shopify",
     "prisma": "prisma",

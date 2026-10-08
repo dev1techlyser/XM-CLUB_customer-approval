@@ -1,6 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "remix",
-  "buildCommand": "bash scripts/vercel-build.sh",
-  "installCommand": "npm install && node scripts/ensure-build-dir.mjs"
+  "buildCommand": "bash scripts/vercel-build.sh"
 }
