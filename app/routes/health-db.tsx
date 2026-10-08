@@ -15,7 +15,7 @@ export const loader = async (_args: LoaderFunctionArgs) => {
       JSON.stringify(
         {
           ok: true,
-          route: "health/db",
+          route: "health-db",
           sessionCount,
           node: process.version,
         },
@@ -30,15 +30,15 @@ export const loader = async (_args: LoaderFunctionArgs) => {
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Database connection failed.";
-    console.error("[health/db]", error);
+    console.error("[health-db]", error);
     return new Response(
       JSON.stringify(
         {
           ok: false,
-          route: "health/db",
+          route: "health-db",
           error: message,
           hint:
-            "Check Vercel DATABASE_URL / DIRECT_URL (Supabase pooler). Run prisma migrate deploy on deploy.",
+            "Check Vercel DATABASE_URL / DIRECT_URL (Supabase pooler). Ensure Session table exists (prisma migrate deploy).",
           node: process.version,
         },
         null,
