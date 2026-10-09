@@ -2,7 +2,7 @@
   "name": "xm-private-reserve",
   "private": true,
   "scripts": {
-    "build": "npx prisma generate && npx remix vite:build",
+    "build": "node scripts/vercel-build.mjs",
     "dev": "shopify app dev",
     "config:link": "shopify app config link",
     "generate": "shopify app generate",
