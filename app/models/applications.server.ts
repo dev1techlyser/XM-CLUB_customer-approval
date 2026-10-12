@@ -24,6 +24,7 @@ import {
   setPrivateReserveCustomerMetafields,
 } from "./customers.server";
 import { sendModularApprovalEmail } from "../services/email";
+import { notifyNewApplicationSubmitted } from "../services/email/notify-new-application.server";
 
 type AdminClient = AdminApiContext;
 
@@ -545,6 +546,7 @@ export type CreateApplicationResult =
 export async function createStorefrontApplication(
   admin: AdminClient,
   rawInput: unknown,
+  context?: { shop?: string },
 ): Promise<CreateApplicationResult> {
   const parsed = storefrontApplicationSchema.safeParse(rawInput);
   if (!parsed.success) {
@@ -670,10 +672,22 @@ export async function createStorefrontApplication(
     };
   }
 
+  const savedNumber = created.field?.value || applicationNumber;
+
+  if (context?.shop) {
+    void notifyNewApplicationSubmitted({
+      admin,
+      shop: context.shop,
+      applicationNumber: savedNumber,
+      application: parsed.data,
+    }).catch((error) => {
+      console.error("[xm-applications] admin notify failed", error);
+    });
+  }
+
   return {
     ok: true,
-    applicationNumber:
-      created.field?.value || applicationNumber,
+    applicationNumber: savedNumber,
     id: created.id,
     handle: created.handle,
   };

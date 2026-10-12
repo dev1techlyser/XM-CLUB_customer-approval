@@ -155,7 +155,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
 
     const input = mapContactFormToApplicationInput(formData);
-    const result = await createStorefrontApplication(admin, input);
+    const shop =
+      auth.context.session?.shop ||
+      new URL(request.url).searchParams.get("shop") ||
+      "";
+    const result = await createStorefrontApplication(admin, input, { shop });
 
     if (!result.ok) {
       return proxyJson({

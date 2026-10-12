@@ -20,6 +20,8 @@ export const loader = async (_args: LoaderFunctionArgs) => {
       hasAppUrl: Boolean(process.env.SHOPIFY_APP_URL),
       hasDatabaseUrl: Boolean(process.env.DATABASE_URL),
       hasDirectUrl: Boolean(process.env.DIRECT_URL),
+      hasResendApiKey: Boolean(process.env.RESEND_API_KEY),
+      hasApplicationNotifyEmail: Boolean(process.env.APPLICATION_NOTIFY_EMAIL),
       hasScopes: Boolean(process.env.SCOPES),
       node: process.version,
       appUrlHost: (() => {
